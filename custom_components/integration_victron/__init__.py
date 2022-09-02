@@ -67,7 +67,7 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Update data via library."""
         try:
-            return await self.api.async_get_data()
+            return True
         except Exception as exception:
             raise UpdateFailed() from exception
 
