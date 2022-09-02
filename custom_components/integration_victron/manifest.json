@@ -1,0 +1,12 @@
+{
+  "domain": "integration_victron",
+  "name": "Integration victron",
+  "documentation": "https://github.com/Ferdiand/integration_victron",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/Ferdiand/integration_victron/issues",
+  "version": "0.0.0",
+  "config_flow": true,
+  "codeowners": [
+    "@Ferdiand"
+  ]
+}
