@@ -61,6 +61,10 @@ class Hub:
 
         self.online = True
 
+        # Some static information about this device
+        self.firmware_version = f"0.0.{random.randint(1, 9)}"
+        self.model = "Test Device"
+
     @property
     def hub_id(self) -> str:
         """ID for dummy hub."""
@@ -83,7 +87,6 @@ class Hub:
     # notified of any state changeds for the relevant device.
     async def publish_updates(self) -> None:
         """Schedule call all registered callbacks."""
-        self._current_position = self._target_position
         for callback in self._callbacks:
             callback()
 
