@@ -36,7 +36,7 @@ class VictronFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(config_entry):
-        return BlueprintOptionsFlowHandler(config_entry)
+        return VictronOptionsFlowHandler(config_entry)
 
     async def _show_config_form(self, user_input):  # pylint: disable=unused-argument
         """Show the configuration form to edit location data."""
@@ -85,6 +85,4 @@ class VictronOptionsFlowHandler(config_entries.OptionsFlow):
 
     async def _update_options(self):
         """Update config entry options."""
-        return self.async_create_entry(
-            title=self.config_entry.data.get(CONF_USERNAME), data=self.options
-        )
+        return self.async_create_entry(title="cacafuti", data=self.options)
