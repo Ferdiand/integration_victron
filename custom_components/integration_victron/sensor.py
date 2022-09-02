@@ -1,30 +1,52 @@
-"""Sensor platform for integration_blueprint."""
+"""Platform for sensor integration."""
+from __future__ import annotations
+
 from homeassistant.components.sensor import SensorEntity
+from homeassistant.const import TEMP_CELSIUS
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
-from .const import DEFAULT_NAME, DOMAIN, ICON, SENSOR
-from .entity import IntegrationBlueprintEntity
-
-
-async def async_setup_entry(hass, entry, async_add_devices):
-    """Setup sensor platform."""
-    coordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_devices([IntegrationBlueprintSensor(coordinator, entry)])
+from . import DOMAIN
 
 
-class IntegrationBlueprintSensor(IntegrationBlueprintEntity, SensorEntity):
-    """integration_blueprint Sensor class."""
+def setup_platform(
+    hass: HomeAssistant,
+    config: ConfigType,
+    add_entities: AddEntitiesCallback,
+    discovery_info: DiscoveryInfoType | None = None,
+) -> None:
+    """Set up the sensor platform."""
+    # We only want this platform to be set up via discovery.
+    if discovery_info is None:
+        return
+    add_entities([ExampleSensor()])
+
+
+class ExampleSensor(SensorEntity):
+    """Representation of a sensor."""
+
+    def __init__(self) -> None:
+        """Initialize the sensor."""
+        self._state = None
 
     @property
-    def name(self):
+    def name(self) -> str:
         """Return the name of the sensor."""
-        return f"{DEFAULT_NAME}_{SENSOR}"
+        return "Example Temperature"
 
     @property
-    def native_value(self):
-        """Return the native value of the sensor."""
-        return self.coordinator.data.get("body")
+    def state(self):
+        """Return the state of the sensor."""
+        return self._state
 
     @property
-    def icon(self):
-        """Return the icon of the sensor."""
-        return ICON
+    def unit_of_measurement(self) -> str:
+        """Return the unit of measurement."""
+        return TEMP_CELSIUS
+
+    def update(self) -> None:
+        """Fetch new state data for the sensor.
+        This is the only method that should fetch new data for Home Assistant.
+        """
+        self._state = self.hass.data[DOMAIN]["temperature"]
