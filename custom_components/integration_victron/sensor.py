@@ -28,3 +28,8 @@ class PanelPowerSensor(IntegrationVictronEntity, SensorEntity):
     def icon(self):
         """Return the icon of the sensor."""
         return ICON
+
+    @property
+    def available(self):
+        """Return True if entity is available."""
+        return True
