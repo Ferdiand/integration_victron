@@ -1,151 +1,133 @@
-# Notice
+## Introduction
+Victron products which feature the VE.Direct serial communications interface allow simple access to
+detailed information of that product. This document describes how to receive and interpret this
+information.
 
-The component and platforms in this repository are not meant to be used by a
-user, but as a "blueprint" that custom component developers can build
-upon, to make more awesome stuff.
+See our Data communication whitepaper for more information on other protocols and products
+available: [Whitepaper-Data-communication-with-Victron-Energy-products_EN.pdf](http://www.victronenergy.com/upload/documents/Whitepaper-Data-communication-with-Victron-Energy-products_EN.pdf)
 
-HAVE FUN! 😎
+The VE.Direct interface includes two modes: Text-mode and the HEX-mode. The purpose of the
+Text-mode is to make retrieving information extremely simple. The product will periodically
+transmit all run-time fields. The HEX-mode allows not only to read data but also write data, for
+example, change settings.
 
-## Why?
+There are two different implementations of the Text-mode and HEX-mode:
 
-This is simple, by having custom_components look (README + structure) the same
-it is easier for developers to help each other and for users to start using them.
+__Older implementations:__
 
-If you are a developer and you want to add things to this "blueprint" that you think more
-developers will have use for, please open a PR to add it :)
+- On power up, a VE.Direct interface will always be in Text-mode, and continuously transmits
+all run-time fields. As soon as it receives a valid HEX-message, it will switch to HEX-mode. It
+will stay in HEX-mode as long as HEX-messages are frequently received. After a product has
+not received any valid HEX-messages for several seconds, it will switch back to Text-mode
+and start to auto transmit the run-time fields periodically again. Some products will send
+Asynchronous HEX-messages, starting with “:A” and ending with a newline ‘\n’, on their
+own. These messages can interrupt a regular Text-mode frame.
 
-## What?
+__Newer implementations__
+- Always have the Text-mode active, regardless of the HEX-messages.
 
-This repository contains multiple files, here is a overview:
+To know more which implementation is applied to your product, please check its specific VE.Direct protocol document.
 
-File | Purpose
--- | --
-`.devcontainer/*` | Used for development/testing with VSCODE, more info in the readme file in that dir.
-`.github/ISSUE_TEMPLATE/feature_request.md` | Template for Feature Requests
-`.github/ISSUE_TEMPLATE/issue.md` | Template for issues
-`.vscode/tasks.json` | Tasks for the devcontainer.
-`custom_components/integration_blueprint/translations/*` | [Translation files.](https://developers.home-assistant.io/docs/internationalization/custom_integration)
-`custom_components/integration_blueprint/__init__.py` | The component file for the integration.
-`custom_components/integration_blueprint/api.py` | This is a sample API client.
-`custom_components/integration_blueprint/binary_sensor.py` | Binary sensor platform for the integration.
-`custom_components/integration_blueprint/config_flow.py` | Config flow file, this adds the UI configuration possibilities.
-`custom_components/integration_blueprint/const.py` | A file to hold shared variables/constants for the entire integration.
-`custom_components/integration_blueprint/manifest.json` | A [manifest file](https://developers.home-assistant.io/docs/en/creating_integration_manifest.html) for Home Assistant.
-`custom_components/integration_blueprint/sensor.py` | Sensor platform for the integration.
-`custom_components/integration_blueprint/switch.py` | Switch sensor platform for the integration.
-`tests/__init__.py` | Makes the `tests` folder a module.
-`tests/conftest.py` | Global [fixtures](https://docs.pytest.org/en/stable/fixture.html) used in tests to [patch](https://docs.python.org/3/library/unittest.mock.html#unittest.mock.patch) functions.
-`tests/test_api.py` | Tests for `custom_components/integration_blueprint/api.py`.
-`tests/test_config_flow.py` | Tests for `custom_components/integration_blueprint/config_flow.py`.
-`tests/test_init.py` | Tests for `custom_components/integration_blueprint/__init__.py`.
-`tests/test_switch.py` | Tests for `custom_components/integration_blueprint/switch.py`.
-`CONTRIBUTING.md` | Guidelines on how to contribute.
-`example.png` | Screenshot that demonstrate how it might look in the UI.
-`info.md` | An example on a info file (used by [hacs][hacs]).
-`LICENSE` | The license file for the project.
-`README.md` | The file you are reading now, should contain info about the integration, installation and configuration instructions.
-`requirements.txt` | Python packages used by this integration.
-`requirements_dev.txt` | Python packages used to provide [IntelliSense](https://code.visualstudio.com/docs/editor/intellisense)/code hints during development of this integration, typically includes packages in `requirements.txt` but may include additional packages
-`requirements_test.txt` | Python packages required to run the tests for this integration, typically includes packages in `requirements_dev.txt` but may include additional packages
+This document only describes the Text-mode.
 
-## How?
+Make sure to also read our [VE.Direct protocol FAQ](http://www.victronenergy.com/live/vedirect_protocol:faq), and the [Open source page on Victron Live](http://www.victronenergy.com/live/open_source:start) which lists projects from other people using our VE.Direct protocol
 
-If you want to use all the potential and features of this blueprint template you
-should use Visual Studio Code to develop in a container. In this container you
-will have all the tools to ease your python development and a dedicated Home
-Assistant core instance to run your integration. See `.devcontainer/README.md` for more information.
+## Physical interface
 
-If you need to work on the python library in parallel of this integration
-(`sampleclient` in this example) there are different options. The following one seems
-easy to implement:
-
-- Create a dedicated branch for your python library on a public git repository (example: branch
-`dev` on `https://github.com/ludeeus/sampleclient`)
-- Update in the `manifest.json` file the `requirements` key to point on your development branch
-( example: `"requirements": ["git+https://github.com/ludeeus/sampleclient.git@dev#devp==0.0.1beta1"]`)
-- Each time you need to make a modification to your python library, push it to your
-development branch and increase the number of the python library version in `manifest.json` file
-to ensure Home Assistant update the code of the python library. (example `"requirements": ["git+https://...==0.0.1beta2"]`).
+The VE.Direct interface is accessed via a 4-pin connector. The picture below shows where the VE.Direct connector is located on a BMV-700.
 
 
-***
-README content if this was a published component:
-***
 
-# integration_blueprint
+Pin Producer Consumer
+1 GND GND
+2 VE.Direct-RX VE.Direct-RX
+3 VE.Direct-TX VE.Direct-TX
+4 Power + Power +
 
-[![GitHub Release][releases-shield]][releases]
-[![GitHub Activity][commits-shield]][commits]
-[![License][license-shield]](LICENSE)
 
-[![hacs][hacsbadge]][hacs]
-![Project Maintenance][maintenance-shield]
-[![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
+Producers are products, such as the BMV battery monitor and the MPPT solar chargers. Consumers are products reading the data, such as the Color Control GX. When connecting a Producer to a Consumer, the Producer’s VE.Direct-TX must be connected to Consumer VE.Direct-RX. The same goes to the Producer VE.Direct-RX, which must be connected to Consumer’s VE.Direct-TX. Note that the pins on the MPPT can have alternative functions. Its VE.Direct-RX pin can be used to switch the charger on and off. Its VE.Direct-TX pin can be configured to send a PWM signal, to dim (street)lights. For details about the connector type see the information at the end of this document.
 
-[![Discord][discord-shield]][discord]
-[![Community Forum][forum-shield]][forum]
+A VE.Direct to USB interface cable can be purchased from Victron Energy (“VE.Direct to USB”, part number ASS030530000). This interface cable provides a virtual comport through USB as well as galvanic isolation.
 
-_Component to integrate with [integration_blueprint][integration_blueprint]._
+A VE.Direct to RS232 interface cable can also be purchased from Victron Energy (“VE.Direct to RS232 interface”, part number ASS030520500)
 
-**This component will set up the following platforms.**
+## Serial port configuration
 
-Platform | Description
--- | --
-`binary_sensor` | Show something `True` or `False`.
-`sensor` | Show info from blueprint API.
-`switch` | Switch something `True` or `False`.
+- Baud rate: 19200
+- Data bits: 8
+- Parity: None
+- Stop bits: 1
+- Flow control: None
 
-![example][exampleimg]
+## Pins to use when using the VE.Direct to RS232 interface
 
-## Installation
+For the communication use the GND, RX and TX pins: pin 5, 2 and 3 on the DB9 connector.
 
-1. Using the tool of choice open the directory (folder) for your HA configuration (where you find `configuration.yaml`).
-2. If you do not have a `custom_components` directory (folder) there, you need to create it.
-3. In the `custom_components` directory (folder) create a new folder called `integration_blueprint`.
-4. Download _all_ the files from the `custom_components/integration_blueprint/` directory (folder) in this repository.
-5. Place the files you downloaded in the new directory (folder) you created.
-6. Restart Home Assistant
-7. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "Integration blueprint"
+Also the DTR signal (pin 4 on the DB9 connector) and/or the RTS signal (pin 7 on the DB9 connector) must be driven high to power the isolated side of the interface. How to program the DTR and RTS differs between used operating systems and hardware.
 
-Using your HA configuration directory (folder) as a starting point you should now also have this:
+For more details see:
+[https://www.victronenergy.com/live/vedirect_protocol:faq#q2when_using_the_vedirect_to_rs232_interface_what_pins_do_i_need](https://www.victronenergy.com/live/vedirect_protocol:faq#q2when_using_the_vedirect_to_rs232_interface_what_pins_do_i_need)
 
-```text
-custom_components/integration_blueprint/translations/en.json
-custom_components/integration_blueprint/translations/nb.json
-custom_components/integration_blueprint/translations/sensor.nb.json
-custom_components/integration_blueprint/__init__.py
-custom_components/integration_blueprint/api.py
-custom_components/integration_blueprint/binary_sensor.py
-custom_components/integration_blueprint/config_flow.py
-custom_components/integration_blueprint/const.py
-custom_components/integration_blueprint/manifest.json
-custom_components/integration_blueprint/sensor.py
-custom_components/integration_blueprint/switch.py
-```
+## Message format
+The device transmits blocks of data at 1 second intervals. Each field is sent using the following format:
 
-## Configuration is done in the UI
+`<Newline><Field-Label><Tab><Field-Value>`
 
-<!---->
 
-## Contributions are welcome!
+The identifiers are defined as follows:
+- `<Newline>`: A carriage return followed by a line feed (0x0D, 0x0A).
+- `<Field-Label>`: An arbitrary length label that identifies the field. Where applicable, this will be the same as the label that is used on the LCD.
+- `<Tab>`: A horizontal tab (0x09).
+- `<Field-Value>`: The ASCII formatted value of this field. The number of characters transmitted depends on the magnitude and sign of the value
 
-If you want to contribute to this please read the [Contribution guidelines](CONTRIBUTING.md)
+## Data integrity
+The statistics are grouped in blocks with a checksum appended. The last field in a block will always be “Checksum”. The value is a single byte, and will not necessarily be a printable ASCII character. The modulo 256 sum of all bytes in a block will equal 0 if there were no transmission errors. Multiple blocks are sent containing different fields.
 
-***
+For more details see:
+[https://www.victronenergy.com/live/vedirect_protocol:faq#q8how_do_i_calculate_the_text_checksum](https://www.victronenergy.com/live/vedirect_protocol:faq#q8how_do_i_calculate_the_text_checksum)
 
-[integration_blueprint]: https://github.com/custom-components/integration_blueprint
-[buymecoffee]: https://www.buymeacoffee.com/ludeeus
-[buymecoffeebadge]: https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?style=for-the-badge
-[commits-shield]: https://img.shields.io/github/commit-activity/y/custom-components/blueprint.svg?style=for-the-badge
-[commits]: https://github.com/custom-components/integration_blueprint/commits/master
-[hacs]: https://github.com/custom-components/hacs
-[hacsbadge]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
-[discord]: https://discord.gg/Qa5fW2R
-[discord-shield]: https://img.shields.io/discord/330944238910963714.svg?style=for-the-badge
-[exampleimg]: example.png
-[forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
-[forum]: https://community.home-assistant.io/
-[license-shield]: https://img.shields.io/github/license/custom-components/blueprint.svg?style=for-the-badge
-[maintenance-shield]: https://img.shields.io/badge/maintainer-Joakim%20Sørensen%20%40ludeeus-blue.svg?style=for-the-badge
-[releases-shield]: https://img.shields.io/github/release/custom-components/blueprint.svg?style=for-the-badge
-[releases]: https://github.com/custom-components/integration_blueprint/releases
+## Fields
+The values sent over the serial communications interface do not necessarily use the same units as the values on the LCD.
+
+### __V__ [mV] : Main or channel 1 (battery) voltage
+### __VPV__ [mV] Panel voltage
+### __PPV__ [W] Panel power
+### __I__ [mA] Main or channel 1 battery current
+### __IL__ [mA] Load current
+### _LOAD_ Load output state (ON/OFF)
+### _Relay_ Relay state
+### _AR_ Alarm reason
+
+### _OR_ Off reason
+
+### _H19_ [0.01 kWh] Yield total (user resettable counter)
+### _H20_ [0.01 kWh] Yield today
+### __H21__ [W] Maximum power today
+### _H22_ [0.01 kWh] Yield yesterday
+### __H23__ [W] Maximum power yesterday
+### _ERR_ Error code
+
+### _CS_ State of operation
+0. Off
+2. Fault 2
+3. Bulk
+4. Absorption
+5. Float
+6. Storage
+7. Equalize (manual)
+9. Inverting
+11. Power supply
+245. Starting-up
+246. Repeated absorption
+247. Auto equalize / Recondition
+248. BatterySafe
+252. External Control
+
+### __FW__ Firmware version (16 bit)
+
+### __PID__ Product ID
+
+### __SER#__ Serial number
+### _HSDS_ Day sequence number (0..364)
+### _MPPT_ Tracker operation mode
+

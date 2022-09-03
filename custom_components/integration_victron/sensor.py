@@ -19,7 +19,12 @@ async def async_setup_entry(hass, entry, async_add_devices):
             VoltageSensor(coordinator, entry, "Panel voltage", "VPV"),
             VoltageSensor(coordinator, entry, "Battery voltage", "V"),
             CurrentSensor(coordinator, entry, "Battery current", "I"),
-            CurrentSensor(coordinator, entry, "Load current", "I"),
+            CurrentSensor(coordinator, entry, "Load current", "IL"),
+            PowerSensor(coordinator, entry, "Max power today", "H21"),
+            PowerSensor(coordinator, entry, "Max power yesterday", "H23"),
+            VictronSensor(coordinator, entry, "Firmware version", "FW"),
+            VictronSensor(coordinator, entry, "Product ID", "PID"),
+            VictronSensor(coordinator, entry, "Serial number", "SER#"),
         ]
     )
 
