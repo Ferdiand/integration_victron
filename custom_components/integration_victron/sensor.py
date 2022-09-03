@@ -12,9 +12,13 @@ from .entity import IntegrationVictronEntity
 async def async_setup_entry(hass, entry, async_add_devices):
     """Setup sensor platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_devices([PowerSensor(coordinator, entry, "Panel power", "PPV")])
-    async_add_devices([VoltageSensor(coordinator, entry, "Panel voltage", "VPV")])
-    async_add_devices([VoltageSensor(coordinator, entry, "Batter voltage", "V")])
+    async_add_devices(
+        [
+            PowerSensor(coordinator, entry, "Panel power", "PPV"),
+            VoltageSensor(coordinator, entry, "Panel voltage", "VPV"),
+            VoltageSensor(coordinator, entry, "Batter voltage", "V"),
+        ]
+    )
 
 
 class VictronSensor(IntegrationVictronEntity, SensorEntity):
