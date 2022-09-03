@@ -28,7 +28,7 @@ class PanelPowerSensor(PowerSensor):
 
     def __init__(self, coordinator, config_entry, name):
         super().__init__(coordinator, config_entry)
-        coordinator._data["PPV"]
+        self.coordinator._data["PPV"] = 0.0
         self._attr_name = name
 
     @property
