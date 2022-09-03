@@ -132,7 +132,11 @@ class ChargerStateSensor(VictronSensor):
             "248": "BatterySafe",
             "252": "External Control",
         }
-        return _states[super().native_value]
+        key = super().native_value
+        if key in _states:
+            return _states[super().native_value]
+        else:
+            return key
 
 
 class ErrorCodeSensor(VictronSensor):
@@ -162,7 +166,11 @@ class ErrorCodeSensor(VictronSensor):
             "117": "Invalid/incompatible firmware",
             "119": "User settings invalid",
         }
-        return _states[super().native_value]
+        key = super().native_value
+        if key in _states:
+            return _states[super().native_value]
+        else:
+            return key
 
 
 class TrackerOperationModeSensor(VictronSensor):
@@ -175,7 +183,11 @@ class TrackerOperationModeSensor(VictronSensor):
             "1": "Voltage or current limited",
             "2": "MPP Tracker active",
         }
-        return _states[super().native_value]
+        key = super().native_value
+        if key in _states:
+            return _states[super().native_value]
+        else:
+            return key
 
 
 class OffReasonModeSensor(VictronSensor):
@@ -184,16 +196,19 @@ class OffReasonModeSensor(VictronSensor):
     @property
     def native_value(self):
         _states = {
+            "0x00000000": "No error",
             "0x00000001": "No input power",
             "0x00000002": "Switched off (power switch)",
             "0x00000004": "Switched off (device mode register) ",
             "0x00000008": "Remote input",
             "0x00000010": "Protection active ",
             "0x00000020": "Paygo",
-            "0x00000008": "Remote input",
-            "0x00000010": "Protection active ",
             "0x00000040": "BMS",
             "0x00000080": "Engine shutdown",
             "0x00000100": "Analysing input voltage",
         }
-        return _states[super().native_value]
+        key = super().native_value
+        if key in _states:
+            return _states[super().native_value]
+        else:
+            return key
