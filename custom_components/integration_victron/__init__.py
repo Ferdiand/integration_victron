@@ -40,6 +40,7 @@ async def async_setup(hass: HomeAssistant, config: Config):
     hass.data[DOMAIN]["coord"] = coordinator
 
     hass.helpers.discovery.load_platform("sensor", DOMAIN, {}, config)
+    return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
