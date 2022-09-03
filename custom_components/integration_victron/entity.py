@@ -19,7 +19,7 @@ class IntegrationVictronEntity(CoordinatorEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {(DOMAIN, self.unique_id)},
+            "identifiers": {(DOMAIN, ID)},
             "name": "SmartSolar charge controller",
             "model": "MPPT 100/20",
             "manufacturer": "victron energy",
