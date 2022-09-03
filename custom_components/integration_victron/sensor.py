@@ -63,7 +63,7 @@ class VoltageSensor(VictronSensor):
 
     @property
     def native_value(self):
-        return super().native_value / 1000
+        return float(super().native_value) / 1000
 
 
 class CurrentSensor(VictronSensor):
