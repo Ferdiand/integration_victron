@@ -7,7 +7,7 @@ https://github.com/custom-components/integration_blueprint
 import asyncio
 from datetime import timedelta
 import logging
-from pickle import TRUE
+import random
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
@@ -71,6 +71,10 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
             return True
         except Exception as exception:
             raise UpdateFailed() from exception
+
+    @property
+    def panel_power(self):
+        return random.random([0, 100])
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

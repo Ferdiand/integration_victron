@@ -8,10 +8,10 @@ from .entity import IntegrationVictronEntity
 async def async_setup_entry(hass, entry, async_add_devices):
     """Setup sensor platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_devices([IntegrationVictronSensor(coordinator, entry)])
+    async_add_devices([PanelPowerSensor(coordinator, entry)])
 
 
-class IntegrationVictronSensor(IntegrationVictronEntity, SensorEntity):
+class PanelPowerSensor(IntegrationVictronEntity, SensorEntity):
     """integration_blueprint Sensor class."""
 
     @property
@@ -22,7 +22,7 @@ class IntegrationVictronSensor(IntegrationVictronEntity, SensorEntity):
     @property
     def native_value(self):
         """Return the native value of the sensor."""
-        return self.coordinator.data.get("body")
+        return self.coordinator.panel_power
 
     @property
     def icon(self):
