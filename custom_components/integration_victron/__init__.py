@@ -7,6 +7,7 @@ https://github.com/custom-components/integration_blueprint
 import asyncio
 from datetime import timedelta
 import logging
+from pickle import TRUE
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
@@ -27,20 +28,7 @@ _LOGGER: logging.Logger = logging.getLogger(__package__)
 
 async def async_setup(hass: HomeAssistant, config: Config):
     """Set up this integration using YAML is not supported."""
-    if hass.data.get(DOMAIN) is None:
-        hass.data.setdefault(DOMAIN, {})
-        _LOGGER.info(STARTUP_MESSAGE)
-
-    coordinator = VictronDataUpdateCoordinator(hass)
-    await coordinator.async_refresh()
-
-    if not coordinator.last_update_success:
-        raise ConfigEntryNotReady
-
-    hass.data[DOMAIN]["coord"] = coordinator
-
-    hass.helpers.discovery.load_platform("sensor", DOMAIN, {}, config)
-    return True
+    return TRUE
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
@@ -50,10 +38,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         _LOGGER.info(STARTUP_MESSAGE)
 
     coordinator = VictronDataUpdateCoordinator(hass)
-    await coordinator.async_refresh()
+    # await coordinator.async_refresh()
 
-    if not coordinator.last_update_success:
-        raise ConfigEntryNotReady
+    # if not coordinator.last_update_success:
+    #    raise ConfigEntryNotReady
 
     hass.data[DOMAIN][entry.entry_id] = coordinator
 
