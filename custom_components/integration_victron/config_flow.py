@@ -1,4 +1,5 @@
 """Adds config flow for Blueprint."""
+from pickle import TRUE
 from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
@@ -31,7 +32,7 @@ class VictronFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         user_input = {}
         # Provide defaults for form
 
-        return await self._show_config_form(user_input)
+        return TRUE
 
     @staticmethod
     @callback
@@ -48,11 +49,7 @@ class VictronFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _test_credentials(self, username, password):
         """Return true if credentials is valid."""
-        try:
-            return True
-        except Exception:  # pylint: disable=broad-except
-            pass
-        return False
+        return True
 
 
 class VictronOptionsFlowHandler(config_entries.OptionsFlow):
@@ -65,23 +62,7 @@ class VictronOptionsFlowHandler(config_entries.OptionsFlow):
 
     async def async_step_init(self, user_input=None):  # pylint: disable=unused-argument
         """Manage the options."""
-        return await self.async_step_user()
-
-    async def async_step_user(self, user_input=None):
-        """Handle a flow initialized by the user."""
-        if user_input is not None:
-            self.options.update(user_input)
-            return await self._update_options()
-
-        return self.async_show_form(
-            step_id="user",
-            data_schema=vol.Schema(
-                {
-                    vol.Required(x, default=self.options.get(x, True)): bool
-                    for x in sorted(PLATFORMS)
-                }
-            ),
-        )
+        return TRUE
 
     async def _update_options(self):
         """Update config entry options."""
