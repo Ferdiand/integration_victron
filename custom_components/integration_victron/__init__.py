@@ -74,7 +74,7 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
 
     @property
     def panel_power(self):
-        return random.random([0, 100])
+        return random.random()
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
