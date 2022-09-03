@@ -1,10 +1,11 @@
-"""BlueprintEntity class"""
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN, NAME, VERSION, ATTRIBUTION, ID
 
 
 class IntegrationVictronEntity(CoordinatorEntity):
+    """Victron Entity class"""
+
     def __init__(self, coordinator, config_entry):
         super().__init__(coordinator)
         self.config_entry = config_entry
@@ -18,9 +19,9 @@ class IntegrationVictronEntity(CoordinatorEntity):
     def device_info(self):
         return {
             "identifiers": {(DOMAIN, self.unique_id)},
-            "name": NAME,
-            "model": VERSION,
-            "manufacturer": NAME,
+            "name": "SmartSolar charge controller",
+            "model": "MPPT 100/20",
+            "manufacturer": "victron energy",
         }
 
     @property
