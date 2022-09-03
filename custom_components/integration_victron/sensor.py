@@ -3,6 +3,7 @@ from homeassistant.components.sensor import (
     SensorEntity,
     DEVICE_CLASS_POWER,
     DEVICE_CLASS_VOLTAGE,
+    DEVICE_CLASS_CURRENT,
 )
 
 from .const import DEFAULT_NAME, DOMAIN, ICON, SENSOR
@@ -16,7 +17,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
         [
             PowerSensor(coordinator, entry, "Panel power", "PPV"),
             VoltageSensor(coordinator, entry, "Panel voltage", "VPV"),
-            VoltageSensor(coordinator, entry, "Batter voltage", "V"),
+            VoltageSensor(coordinator, entry, "Battery voltage", "V"),
+            CurrentSensor(coordinator, entry, "Battery current", "I"),
+            CurrentSensor(coordinator, entry, "Load current", "I"),
         ]
     )
 
@@ -57,3 +60,23 @@ class VoltageSensor(VictronSensor):
     @property
     def native_unit_of_measurement(self) -> str | None:
         return "V"
+
+    @property
+    def native_value(self):
+        return super().native_value / 1000
+
+
+class CurrentSensor(VictronSensor):
+    """integration_blueprint Sensor class."""
+
+    @property
+    def device_class(self) -> str | None:
+        return DEVICE_CLASS_CURRENT
+
+    @property
+    def native_unit_of_measurement(self) -> str | None:
+        return "A"
+
+    @property
+    def native_value(self):
+        return super().native_value / 1000
