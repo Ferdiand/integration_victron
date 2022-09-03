@@ -63,7 +63,8 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
     def __init__(self, hass: HomeAssistant) -> None:
         """Initialize."""
         self.platforms = []
-        self.data["PPV"] = 0.0
+        self._data = {}
+        self._data["PPV"] = 0.0
         self._ser = serial.Serial("/dev/ttyUSB0", baudrate=19200, timeout=1)
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
 
@@ -72,14 +73,14 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
         try:
             for field in self._ser.read_all().decode("ascii", "ignore").split("\r\n"):
                 value = field.split("\t")
-                self.data[value[0]] = value[-1]
+                self._data[value[0]] = value[-1]
             return True
         except Exception as exception:
             raise UpdateFailed() from exception
 
     @property
     def panel_power(self):
-        return self.data["PPV"]
+        return self._data["PPV"]
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
