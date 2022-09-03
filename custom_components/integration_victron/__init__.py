@@ -27,7 +27,19 @@ _LOGGER: logging.Logger = logging.getLogger(__package__)
 
 async def async_setup(hass: HomeAssistant, config: Config):
     """Set up this integration using YAML is not supported."""
-    return True
+    if hass.data.get(DOMAIN) is None:
+        hass.data.setdefault(DOMAIN, {})
+        _LOGGER.info(STARTUP_MESSAGE)
+
+    coordinator = VictronDataUpdateCoordinator(hass)
+    await coordinator.async_refresh()
+
+    if not coordinator.last_update_success:
+        raise ConfigEntryNotReady
+
+    hass.data[DOMAIN]["coord"] = coordinator
+
+    hass.helpers.discovery.load_platform("sensor", DOMAIN, {}, config)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
