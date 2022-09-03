@@ -100,14 +100,14 @@ The values sent over the serial communications interface do not necessarily use 
 
 ### _OR_ Off reason
 
-### _H19_ [0.01 kWh] Yield total (user resettable counter)
-### _H20_ [0.01 kWh] Yield today
+### __H19__ [0.01 kWh] Yield total (user resettable counter)
+### __H20__ [0.01 kWh] Yield today
 ### __H21__ [W] Maximum power today
-### _H22_ [0.01 kWh] Yield yesterday
+### __H22__ [0.01 kWh] Yield yesterday
 ### __H23__ [W] Maximum power yesterday
 ### _ERR_ Error code
 
-### _CS_ State of operation
+### __CS__ State of operation
 0. Off
 2. Fault 2
 3. Bulk
