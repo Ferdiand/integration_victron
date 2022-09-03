@@ -1,5 +1,5 @@
 """Sensor platform for integration_blueprint."""
-from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor import SensorEntity, DEVICE_CLASS_POWER
 
 from .const import DEFAULT_NAME, DOMAIN, ICON, SENSOR
 from .entity import IntegrationVictronEntity
@@ -16,7 +16,7 @@ class PowerSensor(IntegrationVictronEntity, SensorEntity):
 
     @property
     def device_class(self) -> str | None:
-        return super().device_class.POWER
+        return DEVICE_CLASS_POWER
 
     @property
     def native_unit_of_measurement(self) -> str | None:
