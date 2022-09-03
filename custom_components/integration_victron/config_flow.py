@@ -31,9 +31,7 @@ class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         #     return self.async_abort(reason="single_instance_allowed")
 
         if user_input is not None:
-            valid = await self._test_credentials(
-                user_input[CONF_USERNAME], user_input[CONF_PASSWORD]
-            )
+            valid = True
             if valid:
                 return self.async_create_entry(
                     title=user_input[CONF_USERNAME], data=user_input
@@ -67,15 +65,6 @@ class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             ),
             errors=self._errors,
         )
-
-    async def _test_credentials(self, username, password):
-        """Return true if credentials is valid."""
-        try:
-            session = async_create_clientsession(self.hass)
-            return True
-        except Exception:  # pylint: disable=broad-except
-            pass
-        return False
 
 
 class BlueprintOptionsFlowHandler(config_entries.OptionsFlow):
