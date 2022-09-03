@@ -89,45 +89,113 @@ For more details see:
 ## Fields
 The values sent over the serial communications interface do not necessarily use the same units as the values on the LCD.
 
-### __V__ [mV] : Main or channel 1 (battery) voltage
-### __VPV__ [mV] Panel voltage
-### __PPV__ [W] Panel power
-### __I__ [mA] Main or channel 1 battery current
-### __IL__ [mA] Load current
-### _LOAD_ Load output state (ON/OFF)
-### _Relay_ Relay state
-### _AR_ Alarm reason
+### __V__ [mV]
+Main or channel 1 (battery) voltage
+### __VPV__ [mV]
+Panel voltage
+### __PPV__ [W]
+Panel power
+### __I__ [mA]
+Main or channel 1 battery current
+### __IL__ [mA]
+Load current
+### _LOAD_
+Load output state (ON/OFF)
+### _Relay_
+Relay state
+### __OR__
+Off reason
+```
+        _states = {
+            "0x00000001": "No input power",
+            "0x00000002": "Switched off (power switch)",
+            "0x00000004": "Switched off (device mode register) ",
+            "0x00000008": "Remote input",
+            "0x00000010": "Protection active ",
+            "0x00000020": "Paygo",
+            "0x00000008": "Remote input",
+            "0x00000010": "Protection active ",
+            "0x00000040": "BMS",
+            "0x00000080": "Engine shutdown",
+            "0x00000100": "Analysing input voltage",
+        }
+```
 
-### _OR_ Off reason
+### __H19__ [0.01 kWh]
+Yield total (user resettable counter)
+### __H20__ [0.01 kWh]
+Yield today
+### __H21__ [W]
+Maximum power today
+### __H22__ [0.01 kWh]
+Yield yesterday
+### __H23__ [W]
+Maximum power yesterday
+### __ERR__
+Error code
+```
+        _states = {
+            "0": "No error",
+            "2": "Battery voltage too high",
+            "17": "Charger temperature too high",
+            "18": "Charger over current",
+            "19": "Charger current reversed",
+            "20": "Bulk time limit exceeded",
+            "21": "Current sensor issue (sensor bias/sensor broken)",
+            "26": "Terminals overheated",
+            "28": "Converter issue (dual converter models only)",
+            "33": "Input voltage too high (solar panel)",
+            "34": "Input current too high (solar panel)",
+            "38": "Input shutdown (due to excessive battery voltage)",
+            "39": "Input shutdown (due to current flow during off mode)",
+            "65": "Lost communication with one of devices",
+            "66": "Synchronised charging device configuration issue",
+            "67": "BMS connection lost",
+            "68": "Network misconfigured",
+            "116": "Factory calibration data lost",
+            "117": "Invalid/incompatible firmware",
+            "119": "User settings invalid",
+        }
+```
+### __CS__
+State of operation
+```
+        _states = {
+            "0": "Off",
+            "2": "Fault",
+            "3": "Bulk",
+            "4": "Absorption",
+            "5": "Float",
+            "6": "Storage",
+            "7": "Equalize (manual)",
+            "9": "Inverting",
+            "11": "Power supply",
+            "245": "Starting-up",
+            "246": "Repeated absorption",
+            "247": "Auto equalize / Recondition",
+            "248": "BatterySafe",
+            "252": "External Control",
+        }
+```
 
-### __H19__ [0.01 kWh] Yield total (user resettable counter)
-### __H20__ [0.01 kWh] Yield today
-### __H21__ [W] Maximum power today
-### __H22__ [0.01 kWh] Yield yesterday
-### __H23__ [W] Maximum power yesterday
-### _ERR_ Error code
+### __FW__
+Firmware version (16 bit)
 
-### __CS__ State of operation
-0. Off
-2. Fault 2
-3. Bulk
-4. Absorption
-5. Float
-6. Storage
-7. Equalize (manual)
-9. Inverting
-11. Power supply
-245. Starting-up
-246. Repeated absorption
-247. Auto equalize / Recondition
-248. BatterySafe
-252. External Control
+### __PID__
+Product ID
 
-### __FW__ Firmware version (16 bit)
+### __SER#__
+Serial number
 
-### __PID__ Product ID
+### _HSDS_
+Day sequence number (0..364)
 
-### __SER#__ Serial number
-### _HSDS_ Day sequence number (0..364)
-### _MPPT_ Tracker operation mode
-
+### __MPPT__
+Tracker operation mode
+```
+        _states = {
+            "0": "Off",
+            "1": "Voltage or current limited",
+            "2": "MPP Tracker active",
+        }
+```

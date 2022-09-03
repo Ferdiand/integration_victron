@@ -30,6 +30,9 @@ async def async_setup_entry(hass, entry, async_add_devices):
             EnergySensor(coordinator, entry, "Yield total", "H19"),
             EnergySensor(coordinator, entry, "Yield today", "H20"),
             EnergySensor(coordinator, entry, "Yield yesterday", "H22"),
+            OffReasonModeSensor(coordinator, entry, "Off Reason", "OR"),
+            ErrorCodeSensor(coordinator, entry, "Error code", "ERR"),
+            TrackerOperationModeSensor(coordinator, entry, "Tracker op", "MPPT"),
         ]
     )
 
@@ -128,5 +131,69 @@ class ChargerStateSensor(VictronSensor):
             "247": "Auto equalize / Recondition",
             "248": "BatterySafe",
             "252": "External Control",
+        }
+        return _states[super().native_value]
+
+
+class ErrorCodeSensor(VictronSensor):
+    """integration_blueprint Sensor class."""
+
+    @property
+    def native_value(self):
+        _states = {
+            "0": "No error",
+            "2": "Battery voltage too high",
+            "17": "Charger temperature too high",
+            "18": "Charger over current",
+            "19": "Charger current reversed",
+            "20": "Bulk time limit exceeded",
+            "21": "Current sensor issue (sensor bias/sensor broken)",
+            "26": "Terminals overheated",
+            "28": "Converter issue (dual converter models only)",
+            "33": "Input voltage too high (solar panel)",
+            "34": "Input current too high (solar panel)",
+            "38": "Input shutdown (due to excessive battery voltage)",
+            "39": "Input shutdown (due to current flow during off mode)",
+            "65": "Lost communication with one of devices",
+            "66": "Synchronised charging device configuration issue",
+            "67": "BMS connection lost",
+            "68": "Network misconfigured",
+            "116": "Factory calibration data lost",
+            "117": "Invalid/incompatible firmware",
+            "119": "User settings invalid",
+        }
+        return _states[super().native_value]
+
+
+class TrackerOperationModeSensor(VictronSensor):
+    """integration_blueprint Sensor class."""
+
+    @property
+    def native_value(self):
+        _states = {
+            "0": "Off",
+            "1": "Voltage or current limited",
+            "2": "MPP Tracker active",
+        }
+        return _states[super().native_value]
+
+
+class OffReasonModeSensor(VictronSensor):
+    """integration_blueprint Sensor class."""
+
+    @property
+    def native_value(self):
+        _states = {
+            "0x00000001": "No input power",
+            "0x00000002": "Switched off (power switch)",
+            "0x00000004": "Switched off (device mode register) ",
+            "0x00000008": "Remote input",
+            "0x00000010": "Protection active ",
+            "0x00000020": "Paygo",
+            "0x00000008": "Remote input",
+            "0x00000010": "Protection active ",
+            "0x00000040": "BMS",
+            "0x00000080": "Engine shutdown",
+            "0x00000100": "Analysing input voltage",
         }
         return _states[super().native_value]

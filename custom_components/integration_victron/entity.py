@@ -19,10 +19,11 @@ class IntegrationVictronEntity(CoordinatorEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {(DOMAIN, ID)},
+            "identifiers": {(DOMAIN, "HQ2129WD7QV")},
             "name": "SmartSolar charge controller",
             "model": "MPPT 100/20",
             "manufacturer": "victron energy",
+            "sw_version": "1.59",
         }
 
     @property
@@ -30,6 +31,6 @@ class IntegrationVictronEntity(CoordinatorEntity):
         """Return the state attributes."""
         return {
             "attribution": ATTRIBUTION,
-            "id": ID,
+            "id": "HQ2129WD7QV",
             "integration": DOMAIN,
         }
