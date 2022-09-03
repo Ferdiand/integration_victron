@@ -1,7 +1,7 @@
 """BlueprintEntity class"""
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN, NAME, VERSION, ATTRIBUTION
+from .const import DOMAIN, NAME, VERSION, ATTRIBUTION, ID
 
 
 class IntegrationVictronEntity(CoordinatorEntity):
@@ -28,6 +28,6 @@ class IntegrationVictronEntity(CoordinatorEntity):
         """Return the state attributes."""
         return {
             "attribution": ATTRIBUTION,
-            "id": str(self.coordinator.data.get("id")),
+            "id": ID,
             "integration": DOMAIN,
         }
