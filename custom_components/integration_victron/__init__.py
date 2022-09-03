@@ -64,7 +64,6 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
         """Initialize."""
         self.platforms = []
         self._data = {}
-        self._data["PPV"] = 0.0
         self._ser = serial.Serial("/dev/ttyUSB0", baudrate=19200, timeout=1)
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
 
@@ -77,10 +76,6 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
             return True
         except Exception as exception:
             raise UpdateFailed() from exception
-
-    @property
-    def panel_power(self):
-        return self._data["PPV"]
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
