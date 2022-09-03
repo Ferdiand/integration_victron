@@ -28,7 +28,7 @@ _LOGGER: logging.Logger = logging.getLogger(__package__)
 
 async def async_setup(hass: HomeAssistant, config: Config):
     """Set up this integration using YAML is not supported."""
-    return TRUE
+    return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
