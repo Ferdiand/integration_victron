@@ -8,6 +8,7 @@ import asyncio
 from datetime import timedelta
 import logging
 import random
+import serial
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
@@ -62,19 +63,22 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
     def __init__(self, hass: HomeAssistant) -> None:
         """Initialize."""
         self.platforms = []
-
+        self._ser = serial.Serial("/dev/ttyUSB0", baudrate=19200, timeout=1)
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
 
     async def _async_update_data(self):
         """Update data via library."""
         try:
+            for field in self._ser.read_all().decode("ascii", "ignore").split("\r\n"):
+                value = field.split("\t")
+                self.data[value[0]] = value[-1]
             return True
         except Exception as exception:
             raise UpdateFailed() from exception
 
     @property
     def panel_power(self):
-        return random.random()
+        return self.data["PPV"]
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
