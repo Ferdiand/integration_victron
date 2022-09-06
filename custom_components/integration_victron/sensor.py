@@ -42,7 +42,7 @@ class VictronSensor(IntegrationVictronEntity, SensorEntity):
 
     def __init__(self, coordinator, config_entry, name, key):
         super().__init__(coordinator, config_entry, key)
-        self.coordinator._data[key] = 0.0
+        self.coordinator._data[key] = "0.0"
         self._attr_name = name
 
     @property
