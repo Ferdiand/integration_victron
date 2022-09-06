@@ -50,6 +50,11 @@ class VictronSensor(IntegrationVictronEntity, SensorEntity):
         """Return the native value of the sensor."""
         return self.coordinator._data[self._key]
 
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        return super().available and self.coordinator._data[self._key] not in self._key
+
 
 class PowerSensor(VictronSensor):
     """integration_blueprint Sensor class."""
