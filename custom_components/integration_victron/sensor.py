@@ -93,8 +93,8 @@ class EnergySensor(VictronSensor):
         try:
             _value = float(self._key)
             return super().available
-        except Exception as exception:
-            raise InvalidStateError() from exception
+        except:
+            return False
 
 
 class VoltageSensor(VictronSensor):
@@ -117,8 +117,8 @@ class VoltageSensor(VictronSensor):
         try:
             _value = float(self._key)
             return super().available
-        except Exception as exception:
-            raise InvalidStateError() from exception
+        except:
+            return False
 
 
 class CurrentSensor(VictronSensor):
@@ -141,8 +141,8 @@ class CurrentSensor(VictronSensor):
         try:
             _value = float(self._key)
             return super().available
-        except Exception as exception:
-            raise InvalidStateError() from exception
+        except:
+            return False
 
 
 class ChargerStateSensor(VictronSensor):
