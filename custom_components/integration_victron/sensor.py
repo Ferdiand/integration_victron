@@ -10,6 +10,8 @@ from homeassistant.components.sensor import (
 from .const import DEFAULT_NAME, DOMAIN, ICON, SENSOR
 from .entity import IntegrationVictronEntity
 
+from homeassistant.exceptions import InvalidStateError
+
 
 async def async_setup_entry(hass, entry, async_add_devices):
     """Setup sensor platform."""
@@ -50,11 +52,6 @@ class VictronSensor(IntegrationVictronEntity, SensorEntity):
         """Return the native value of the sensor."""
         return self.coordinator._data[self._key]
 
-    @property
-    def available(self) -> bool:
-        """Return if entity is available."""
-        return super().available and self.coordinator._data[self._key] not in self._key
-
 
 class PowerSensor(VictronSensor):
     """integration_blueprint Sensor class."""
@@ -66,6 +63,14 @@ class PowerSensor(VictronSensor):
     @property
     def native_unit_of_measurement(self) -> str | None:
         return "W"
+
+    @property
+    def available(self) -> bool:
+        try:
+            _value = float(self._key)
+            return super().available
+        except Exception as exception:
+            raise InvalidStateError() from exception
 
 
 class EnergySensor(VictronSensor):
@@ -83,6 +88,14 @@ class EnergySensor(VictronSensor):
     def native_value(self):
         return float(super().native_value) / 100
 
+    @property
+    def available(self) -> bool:
+        try:
+            _value = float(self._key)
+            return super().available
+        except Exception as exception:
+            raise InvalidStateError() from exception
+
 
 class VoltageSensor(VictronSensor):
     """integration_blueprint Sensor class."""
@@ -99,6 +112,14 @@ class VoltageSensor(VictronSensor):
     def native_value(self):
         return float(super().native_value) / 1000
 
+    @property
+    def available(self) -> bool:
+        try:
+            _value = float(self._key)
+            return super().available
+        except Exception as exception:
+            raise InvalidStateError() from exception
+
 
 class CurrentSensor(VictronSensor):
     """integration_blueprint Sensor class."""
@@ -114,6 +135,14 @@ class CurrentSensor(VictronSensor):
     @property
     def native_value(self):
         return float(super().native_value) / 1000
+
+    @property
+    def available(self) -> bool:
+        try:
+            _value = float(self._key)
+            return super().available
+        except Exception as exception:
+            raise InvalidStateError() from exception
 
 
 class ChargerStateSensor(VictronSensor):
