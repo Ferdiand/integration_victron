@@ -67,7 +67,7 @@ class PowerSensor(VictronSensor):
     @property
     def available(self) -> bool:
         try:
-            _value = float(self._key)
+            _value = float(self.coordinator._data[self._key])
             return super().available
         except Exception as exception:
             raise InvalidStateError() from exception
@@ -91,10 +91,10 @@ class EnergySensor(VictronSensor):
     @property
     def available(self) -> bool:
         try:
-            _value = float(self._key)
+            _value = float(self.coordinator._data[self._key])
             return super().available
-        except:
-            return False
+        except Exception as exception:
+            raise InvalidStateError() from exception
 
 
 class VoltageSensor(VictronSensor):
@@ -115,10 +115,10 @@ class VoltageSensor(VictronSensor):
     @property
     def available(self) -> bool:
         try:
-            _value = float(self._key)
+            _value = float(self.coordinator._data[self._key])
             return super().available
-        except:
-            return False
+        except Exception as exception:
+            raise InvalidStateError() from exception
 
 
 class CurrentSensor(VictronSensor):
@@ -139,10 +139,10 @@ class CurrentSensor(VictronSensor):
     @property
     def available(self) -> bool:
         try:
-            _value = float(self._key)
+            _value = float(self.coordinator._data[self._key])
             return super().available
-        except:
-            return False
+        except Exception as exception:
+            raise InvalidStateError() from exception
 
 
 class ChargerStateSensor(VictronSensor):
