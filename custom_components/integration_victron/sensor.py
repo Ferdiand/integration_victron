@@ -53,7 +53,7 @@ class VictronSensor(IntegrationVictronEntity, SensorEntity):
         return self.coordinator._data[self._key]
 
     @property
-    def avaliable(self) -> bool:
+    def available(self) -> bool:
         """Return if meassure is avalaiable"""
         if (
             self._key in self.coordinator._data[self._key]
@@ -77,7 +77,7 @@ class PowerSensor(VictronSensor):
 
     @property
     def available(self) -> bool:
-        if super().available():
+        if super().available() is True:
             try:
                 _value = float(self.coordinator._data[self._key])
                 return True
@@ -104,7 +104,7 @@ class EnergySensor(VictronSensor):
 
     @property
     def available(self) -> bool:
-        if super().available():
+        if super().available() is True:
             try:
                 _value = float(self.coordinator._data[self._key])
                 return True
@@ -131,7 +131,7 @@ class VoltageSensor(VictronSensor):
 
     @property
     def available(self) -> bool:
-        if super().available():
+        if super().available() is True:
             try:
                 _value = float(self.coordinator._data[self._key])
                 return True
@@ -158,7 +158,7 @@ class CurrentSensor(VictronSensor):
 
     @property
     def available(self) -> bool:
-        if super().available():
+        if super().available() is True:
             try:
                 _value = float(self.coordinator._data[self._key])
                 return True
