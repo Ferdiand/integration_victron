@@ -52,6 +52,17 @@ class VictronSensor(IntegrationVictronEntity, SensorEntity):
         """Return the native value of the sensor."""
         return self.coordinator._data[self._key]
 
+    @property
+    def avaliable(self) -> bool:
+        """Return if meassure is avalaiable"""
+        if (
+            self._key in self.coordinator._data[self._key]
+            or self.coordinator._data[self._key] is ""
+        ):
+            return False
+        else:
+            return super().available()
+
 
 class PowerSensor(VictronSensor):
     """integration_blueprint Sensor class."""
@@ -66,11 +77,14 @@ class PowerSensor(VictronSensor):
 
     @property
     def available(self) -> bool:
-        try:
-            _value = float(self.coordinator._data[self._key])
-            return super().available
-        except Exception as exception:
-            raise InvalidStateError() from exception
+        if super().available():
+            try:
+                _value = float(self.coordinator._data[self._key])
+                return True
+            except Exception as exception:
+                raise InvalidStateError() from exception
+        else:
+            return False
 
 
 class EnergySensor(VictronSensor):
@@ -90,11 +104,14 @@ class EnergySensor(VictronSensor):
 
     @property
     def available(self) -> bool:
-        try:
-            _value = float(self.coordinator._data[self._key])
-            return super().available
-        except Exception as exception:
-            raise InvalidStateError() from exception
+        if super().available():
+            try:
+                _value = float(self.coordinator._data[self._key])
+                return True
+            except Exception as exception:
+                raise InvalidStateError() from exception
+        else:
+            return False
 
 
 class VoltageSensor(VictronSensor):
@@ -114,11 +131,14 @@ class VoltageSensor(VictronSensor):
 
     @property
     def available(self) -> bool:
-        try:
-            _value = float(self.coordinator._data[self._key])
-            return super().available
-        except Exception as exception:
-            raise InvalidStateError() from exception
+        if super().available():
+            try:
+                _value = float(self.coordinator._data[self._key])
+                return True
+            except Exception as exception:
+                raise InvalidStateError() from exception
+        else:
+            return False
 
 
 class CurrentSensor(VictronSensor):
@@ -138,11 +158,14 @@ class CurrentSensor(VictronSensor):
 
     @property
     def available(self) -> bool:
-        try:
-            _value = float(self.coordinator._data[self._key])
-            return super().available
-        except Exception as exception:
-            raise InvalidStateError() from exception
+        if super().available():
+            try:
+                _value = float(self.coordinator._data[self._key])
+                return True
+            except Exception as exception:
+                raise InvalidStateError() from exception
+        else:
+            return False
 
 
 class ChargerStateSensor(VictronSensor):
