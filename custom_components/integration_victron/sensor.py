@@ -56,13 +56,12 @@ class VictronSensor(IntegrationVictronEntity, SensorEntity):
     def available(self) -> bool:
         """Return if meassure is avalaiable"""
         if (
-            self._key
-            in self.coordinator._data[self._key]
-            # or self.coordinator._data[self._key] is ""
+            self._key in self.coordinator._data[self._key]
+            or self.coordinator._data[self._key] is ""
         ):
             return False
         else:
-            return IntegrationVictronEntity.available
+            return True
 
 
 class PowerSensor(VictronSensor):
