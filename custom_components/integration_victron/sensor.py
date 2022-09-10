@@ -77,7 +77,7 @@ class PowerSensor(VictronSensor):
 
     @property
     def available(self) -> bool:
-        if super().available() is True:
+        if super().available is True:
             try:
                 _value = float(self.coordinator._data[self._key])
                 return True
