@@ -61,7 +61,7 @@ class VictronSensor(IntegrationVictronEntity, SensorEntity):
         ):
             return False
         else:
-            return super().available()
+            return IntegrationVictronEntity.available()
 
 
 class PowerSensor(VictronSensor):
