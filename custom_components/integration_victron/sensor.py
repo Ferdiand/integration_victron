@@ -81,8 +81,8 @@ class PowerSensor(VictronSensor):
             try:
                 _value = float(self.coordinator._data[self._key])
                 return True
-            except Exception as exception:
-                raise InvalidStateError() from exception
+            except:
+                return False
         else:
             return False
 
@@ -108,8 +108,8 @@ class EnergySensor(VictronSensor):
             try:
                 _value = float(self.coordinator._data[self._key])
                 return True
-            except Exception as exception:
-                raise InvalidStateError() from exception
+            except:
+                return False
         else:
             return False
 
@@ -135,8 +135,8 @@ class VoltageSensor(VictronSensor):
             try:
                 _value = float(self.coordinator._data[self._key])
                 return True
-            except Exception as exception:
-                raise InvalidStateError() from exception
+            except:
+                return False
         else:
             return False
 
@@ -162,8 +162,8 @@ class CurrentSensor(VictronSensor):
             try:
                 _value = float(self.coordinator._data[self._key])
                 return True
-            except Exception as exception:
-                raise InvalidStateError() from exception
+            except:
+                return False
         else:
             return False
 
