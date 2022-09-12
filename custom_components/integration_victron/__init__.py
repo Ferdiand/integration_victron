@@ -73,7 +73,6 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
             for field in self._ser.read_all().decode("ascii", "ignore").split("\r\n"):
                 value = field.split("\t")
                 self._data[value[0]] = value[-1]
-                _LOGGER.warning(f"Value: {field} : key: {value}")
             return True
         except Exception as exception:
             raise UpdateFailed() from exception

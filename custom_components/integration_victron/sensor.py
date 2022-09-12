@@ -11,6 +11,9 @@ from .const import DEFAULT_NAME, DOMAIN, ICON, SENSOR
 from .entity import IntegrationVictronEntity
 
 from homeassistant.exceptions import InvalidStateError
+import logging
+
+_LOGGER: logging.Logger = logging.getLogger(__package__)
 
 
 async def async_setup_entry(hass, entry, async_add_devices):
@@ -59,6 +62,9 @@ class VictronSensor(IntegrationVictronEntity, SensorEntity):
             self._key in self.coordinator._data[self._key]
             or self.coordinator._data[self._key] is ""
         ):
+            _LOGGER.warning(
+                f"Entity not avaliable: {self.key} : {self.coordinator._data[self._key]}"
+            )
             return False
         else:
             return True
@@ -82,6 +88,9 @@ class PowerSensor(VictronSensor):
                 _value = float(self.coordinator._data[self._key])
                 return True
             except:
+                _LOGGER.warning(
+                    f"Entity not avaliable: {self.key} : {self.coordinator._data[self._key]}"
+                )
                 return False
         else:
             return False
@@ -109,6 +118,9 @@ class EnergySensor(VictronSensor):
                 _value = float(self.coordinator._data[self._key])
                 return True
             except:
+                _LOGGER.warning(
+                    f"Entity not avaliable: {self.key} : {self.coordinator._data[self._key]}"
+                )
                 return False
         else:
             return False
@@ -136,6 +148,9 @@ class VoltageSensor(VictronSensor):
                 _value = float(self.coordinator._data[self._key])
                 return True
             except:
+                _LOGGER.warning(
+                    f"Entity not avaliable: {self.key} : {self.coordinator._data[self._key]}"
+                )
                 return False
         else:
             return False
@@ -163,6 +178,9 @@ class CurrentSensor(VictronSensor):
                 _value = float(self.coordinator._data[self._key])
                 return True
             except:
+                _LOGGER.warning(
+                    f"Entity not avaliable: {self.key} : {self.coordinator._data[self._key]}"
+                )
                 return False
         else:
             return False
