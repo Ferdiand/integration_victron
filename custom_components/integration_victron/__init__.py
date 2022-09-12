@@ -6,6 +6,7 @@ https://github.com/custom-components/integration_blueprint
 """
 import asyncio
 from datetime import timedelta
+import time
 import logging
 import random
 import serial
@@ -63,17 +64,23 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
     def __init__(self, hass: HomeAssistant) -> None:
         """Initialize."""
         self.platforms = []
-        self._data = {}
         self._ser = serial.Serial("/dev/ttyUSB0", baudrate=19200, timeout=1)
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
 
     async def _async_update_data(self):
         """Update data via library."""
         try:
+            _data = {}
             for field in self._ser.read_all().decode("ascii", "ignore").split("\r\n"):
                 value = field.split("\t")
-                self._data[value[0]] = value[-1]
-            return True
+                if value[0] != value[-1]:
+                    _data[value[0]] = {
+                        "value": value[-1],
+                        "timestamp": time.localtime(),
+                    }
+                else:
+                    self.logger.warning(f"Invalid pair values {value}")
+            return _data
         except Exception as exception:
             raise UpdateFailed() from exception
 

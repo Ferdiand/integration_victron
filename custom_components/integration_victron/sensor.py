@@ -11,9 +11,7 @@ from .const import DEFAULT_NAME, DOMAIN, ICON, SENSOR
 from .entity import IntegrationVictronEntity
 
 from homeassistant.exceptions import InvalidStateError
-import logging
-
-_LOGGER: logging.Logger = logging.getLogger(__package__)
+import time
 
 
 async def async_setup_entry(hass, entry, async_add_devices):
@@ -47,27 +45,32 @@ class VictronSensor(IntegrationVictronEntity, SensorEntity):
 
     def __init__(self, coordinator, config_entry, name, key):
         super().__init__(coordinator, config_entry, key)
-        self.coordinator._data[key] = "0.0"
         self._attr_name = name
+        self._last_update = time.localtime()
 
     @property
     def native_value(self):
         """Return the native value of the sensor."""
-        return self.coordinator._data[self._key]
+        self._last_update = self.coordinator.data[self._key]["timestamp"]
+        return self.coordinator.data[self._key]["value"]
 
     @property
     def available(self) -> bool:
         """Return if meassure is avalaiable"""
-        if (
-            self._key in self.coordinator._data[self._key]
-            or self.coordinator._data[self._key] is ""
-        ):
-            _LOGGER.warning(
-                f"Entity not avaliable: {self._key} : {self.coordinator._data[self._key]}"
+        if self._key in self.coordinator.data:
+            _coordinator_update = self.coordinator.data[self._key]["timestamp"]
+            if self._last_update != _coordinator_update:
+                return super().available()
+            else:
+                self.coordinator.logger.warning(
+                    f"No variable update {self._key}: last update {self._last_update} cordinator update={_coordinator_update}"
+                )
+                return False
+        else:
+            self.coordinator.logger.warning(
+                f"key {self._key} not in data {self.coordinator.data}"
             )
             return False
-        else:
-            return True
 
 
 class PowerSensor(VictronSensor):
@@ -85,11 +88,11 @@ class PowerSensor(VictronSensor):
     def available(self) -> bool:
         if super().available is True:
             try:
-                _value = float(self.coordinator._data[self._key])
+                _value = float(self.coordinator.data[self._key]["value"])
                 return True
             except:
-                _LOGGER.warning(
-                    f"Entity not avaliable: {self._key} : {self.coordinator._data[self._key]}"
+                self.coordinator.logger.warning(
+                    f"Entity not avaliable: {self._key} : {self.coordinator.data[self._key]}"
                 )
                 return False
         else:
@@ -115,11 +118,11 @@ class EnergySensor(VictronSensor):
     def available(self) -> bool:
         if super().available is True:
             try:
-                _value = float(self.coordinator._data[self._key])
+                _value = float(self.coordinator.data[self._key]["value"])
                 return True
             except:
-                _LOGGER.warning(
-                    f"Entity not avaliable: {self._key} : {self.coordinator._data[self._key]}"
+                self.coordinator.logger.warning(
+                    f"Entity not avaliable: {self._key} : {self.coordinator.data[self._key]}"
                 )
                 return False
         else:
@@ -145,11 +148,11 @@ class VoltageSensor(VictronSensor):
     def available(self) -> bool:
         if super().available is True:
             try:
-                _value = float(self.coordinator._data[self._key])
+                _value = float(self.coordinator.data[self._key]["value"])
                 return True
             except:
-                _LOGGER.warning(
-                    f"Entity not avaliable: {self._key} : {self.coordinator._data[self._key]}"
+                self.coordinator.logger.warning(
+                    f"Entity not avaliable: {self._key} : {self.coordinator.data[self._key]}"
                 )
                 return False
         else:
@@ -175,10 +178,12 @@ class CurrentSensor(VictronSensor):
     def available(self) -> bool:
         if super().available is True:
             try:
-                _value = float(self.coordinator._data[self._key])
+                _value = float(self.coordinator.data[self._key]["value"])
                 return True
             except:
-                _LOGGER.warning(f"Entity not avaliable: {key} : {value}")
+                self.coordinator.logger.warning(
+                    f"Entity not avaliable: {self._key} : {self.coordinator.data[self._key]}"
+                )
                 return False
         else:
             return False
