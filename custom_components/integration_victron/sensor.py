@@ -63,7 +63,7 @@ class VictronSensor(IntegrationVictronEntity, SensorEntity):
             or self.coordinator._data[self._key] is ""
         ):
             _LOGGER.warning(
-                f"Entity not avaliable: {self.key} : {self.coordinator._data[self._key]}"
+                f"Entity not avaliable: {self._key} : {self.coordinator._data[self._key]}"
             )
             return False
         else:
@@ -89,7 +89,7 @@ class PowerSensor(VictronSensor):
                 return True
             except:
                 _LOGGER.warning(
-                    f"Entity not avaliable: {self.key} : {self.coordinator._data[self._key]}"
+                    f"Entity not avaliable: {self._key} : {self.coordinator._data[self._key]}"
                 )
                 return False
         else:
@@ -119,7 +119,7 @@ class EnergySensor(VictronSensor):
                 return True
             except:
                 _LOGGER.warning(
-                    f"Entity not avaliable: {self.key} : {self.coordinator._data[self._key]}"
+                    f"Entity not avaliable: {self._key} : {self.coordinator._data[self._key]}"
                 )
                 return False
         else:
@@ -149,7 +149,7 @@ class VoltageSensor(VictronSensor):
                 return True
             except:
                 _LOGGER.warning(
-                    f"Entity not avaliable: {self.key} : {self.coordinator._data[self._key]}"
+                    f"Entity not avaliable: {self._key} : {self.coordinator._data[self._key]}"
                 )
                 return False
         else:
@@ -178,9 +178,7 @@ class CurrentSensor(VictronSensor):
                 _value = float(self.coordinator._data[self._key])
                 return True
             except:
-                _LOGGER.warning(
-                    f"Entity not avaliable: {self.key} : {self.coordinator._data[self._key]}"
-                )
+                _LOGGER.warning(f"Entity not avaliable: {key} : {value}")
                 return False
         else:
             return False
