@@ -60,7 +60,7 @@ class VictronSensor(IntegrationVictronEntity, SensorEntity):
         if self._key in self.coordinator.data:
             _coordinator_update = self.coordinator.data[self._key]["timestamp"]
             if self._last_update != _coordinator_update:
-                return super().available()
+                return super().available
             else:
                 self.coordinator.logger.warning(
                     f"No variable update {self._key}: last update {self._last_update} cordinator update={_coordinator_update}"
