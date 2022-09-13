@@ -72,7 +72,9 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
         """Update data via library."""
         try:
             _data = {}
-            for field in self._ser.read_all().decode("ascii", "ignore").split("\r\n"):
+            _read = self._ser.read_all().decode("ascii", "ignore")
+            self.logger.warning(f"readed from serial {_read}")
+            for field in _read.split("\r\n"):
                 value = field.split("\t")
                 if value[0] != value[-1]:
                     _data[value[0]] = {
