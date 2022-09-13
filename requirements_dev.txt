@@ -1,2 +1,4 @@
 homeassistant
 pyserial
+adafruit-python-shell
+adafruit-circuitpython-dht

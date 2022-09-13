@@ -10,6 +10,7 @@ import time
 import logging
 import random
 import serial
+import board
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
