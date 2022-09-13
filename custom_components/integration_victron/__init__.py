@@ -64,25 +64,49 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
     def __init__(self, hass: HomeAssistant) -> None:
         """Initialize."""
         self.platforms = []
-        self.data = {}
+        self.data = {
+            "PID": {"value": "", "timestamp": time.localtime()},
+            "FW": {"value": "", "timestamp": time.localtime()},
+            "SER#": {"value": "", "timestamp": time.localtime()},
+            "V": {"value": "", "timestamp": time.localtime()},
+            "I": {"value": "", "timestamp": time.localtime()},
+            "VPV": {"value": "", "timestamp": time.localtime()},
+            "PPV": {"value": "", "timestamp": time.localtime()},
+            "CS": {"value": "", "timestamp": time.localtime()},
+            "MPPT": {"value": "", "timestamp": time.localtime()},
+            "OR": {"value": "", "timestamp": time.localtime()},
+            "ERR": {"value": "", "timestamp": time.localtime()},
+            "LOAD": {"value": "", "timestamp": time.localtime()},
+            "H19": {"value": "", "timestamp": time.localtime()},
+            "H20": {"value": "", "timestamp": time.localtime()},
+            "H21": {"value": "", "timestamp": time.localtime()},
+            "H22": {"value": "", "timestamp": time.localtime()},
+            "H23": {"value": "", "timestamp": time.localtime()},
+            "HSDS": {"value": "", "timestamp": time.localtime()},
+            "Checksum": {"value": "", "timestamp": time.localtime()},
+        }
         self._ser = serial.Serial("/dev/ttyUSB0", baudrate=19200, timeout=1)
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
 
     async def _async_update_data(self):
         """Update data via library."""
+        _data = self.data
         try:
-            _data = {}
             _read = self._ser.read_all().decode("ascii", "ignore").split("\r\n")
             self.logger.warning(f"readed from serial {_read}")
             for field in _read:
                 value = field.split("\t")
-                if value[0] != value[-1]:
-                    _data[value[0]] = {
-                        "value": value[-1],
-                        "timestamp": time.localtime(),
-                    }
+                if value[0] in self.data.keys():
+                    try:
+                        _data[value[0]] = {
+                            "value": value[-1],
+                            "timestamp": time.localtime(),
+                        }
+                    except:
+                        self.logger.warning(f"There is no value field: {value}")
                 else:
-                    self.logger.warning(f"Invalid pair values {value}")
+                    self.logger.warning(f"key value not defined: {value}")
+
             return _data
         except Exception as exception:
             raise UpdateFailed() from exception
