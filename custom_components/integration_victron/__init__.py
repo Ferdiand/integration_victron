@@ -63,6 +63,7 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
 
     def __init__(self, hass: HomeAssistant) -> None:
         """Initialize."""
+        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
         self.platforms = []
         self.data = {
             "PID": {"value": "", "timestamp": time.localtime()},
@@ -86,7 +87,6 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
             "Checksum": {"value": "", "timestamp": time.localtime()},
         }
         self._ser = serial.Serial("/dev/ttyUSB0", baudrate=19200, timeout=1)
-        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
 
     async def _async_update_data(self):
         """Update data via library."""
