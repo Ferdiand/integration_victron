@@ -97,12 +97,12 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
             for field in _read:
                 value = field.split("\t")
                 if value[0] in self.data.keys():
-                    try:
+                    if len(value) > 1:
                         _data[value[0]] = {
                             "value": value[-1],
                             "timestamp": time.localtime(),
                         }
-                    except:
+                    else:
                         self.logger.warning(f"There is no value field: {value}")
                 else:
                     self.logger.warning(f"key value not defined: {value}")
