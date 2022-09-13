@@ -85,6 +85,7 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
             "H23": {"value": "", "timestamp": time.localtime()},
             "HSDS": {"value": "", "timestamp": time.localtime()},
             "Checksum": {"value": "", "timestamp": time.localtime()},
+            "IL": {"value": "", "timestamp": time.localtime()},
         }
         self._ser = serial.Serial("/dev/ttyUSB0", baudrate=19200, timeout=1)
 
@@ -93,7 +94,6 @@ class VictronDataUpdateCoordinator(DataUpdateCoordinator):
         _data = self.data
         try:
             _read = self._ser.read_all().decode("ascii", "ignore").split("\r\n")
-            self.logger.warning(f"readed from serial {_read}")
             for field in _read:
                 value = field.split("\t")
                 if value[0] in self.data.keys():
