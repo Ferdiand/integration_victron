@@ -8,7 +8,6 @@
   "config_flow": true,
   "requirements": [
     "pyserial",
-    "adafruit-python-shell",
     "adafruit-circuitpython-dht"
   ],
   "codeowners": [
