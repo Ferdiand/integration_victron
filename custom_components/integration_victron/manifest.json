@@ -6,6 +6,11 @@
   "issue_tracker": "https://github.com/Ferdiand/integration_victron/issues",
   "version": "0.0.0",
   "config_flow": true,
+  "requirements": [
+    "pyserial",
+    "adafruit-python-shell",
+    "adafruit-circuitpython-dht"
+  ],
   "codeowners": [
     "@Ferdiand"
   ]
