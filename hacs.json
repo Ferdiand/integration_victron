@@ -1,6 +1,6 @@
 {
     "name": "Integration Victron",
-    "hacs": "0.0.1",
+    "hacs": "0.0.2",
     "domains": [
         "binary_sensor",
         "sensor"
