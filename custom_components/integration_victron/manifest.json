@@ -4,7 +4,7 @@
   "documentation": "https://github.com/Ferdiand/integration_victron",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/Ferdiand/integration_victron/issues",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "config_flow": true,
   "requirements": [
     "pyserial"
