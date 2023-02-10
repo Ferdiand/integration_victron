@@ -251,7 +251,9 @@ class smart_solar_MPPT:
         # remove last item, may be corrupt
         _buffer.pop(-1)
 
-        if _buffer == "":
+        if _buffer == [""]:
+            self.logger.warning(f"buffer is empty: {_buffer}")
+        else:
             for _line in _buffer:
                 _field = _line.split("\t")
                 if len(_field) > 1:
@@ -263,8 +265,7 @@ class smart_solar_MPPT:
                         self.logger.warning(f"Key not defined {_field}")
                 else:
                     self.logger.warning(f"Field structure not valid: {_field}")
-        else:
-            self.logger.warning(f"buffer is empty: {_buffer}")
+
 
         return self._data
       #  except Exception as exception:
