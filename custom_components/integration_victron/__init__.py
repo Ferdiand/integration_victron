@@ -16,6 +16,15 @@ from homeassistant.core import Config, HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from .smart_solar_MPPT import (
+    CS_VALUE_LIST,
+    MPPT_VALUE_LIST,
+    OR_VALUE_LIST,
+    ERR_VALUE_LIST,
+    PID_VALUE_LIST,
+)
+
+
 
 from .const import (
     DOMAIN,
