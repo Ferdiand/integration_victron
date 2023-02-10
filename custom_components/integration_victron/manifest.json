@@ -7,9 +7,9 @@
   "version": "0.0.0",
   "config_flow": true,
   "requirements": [
-    "pyserial",
+    "pyserial"
   ],
   "codeowners": [
-    "@Ferdiand"
+    "@ferdiand"
   ]
 }
