@@ -19,6 +19,8 @@ BINARY_SENSOR = "binary_sensor"
 SENSOR = "sensor"
 PLATFORMS = [SENSOR]
 
+OPTIONS = ["Simulation"]
+
 # Configuration and options
 CONF_ENABLED = "enabled"
 CONF_USERNAME = "username"
