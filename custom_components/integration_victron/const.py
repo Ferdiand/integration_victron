@@ -3,7 +3,7 @@
 NAME = "Integration Victron"
 DOMAIN = "integration_victron"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.0.1"
+VERSION = "0.0.3"
 ID = "BLA BAL"
 ATTRIBUTION = "https://github.com/Ferdiand/integration_victron"
 ISSUE_URL = "https://github.com/Ferdiand/integration_victron/issues"
