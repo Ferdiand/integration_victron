@@ -242,7 +242,7 @@ class smart_solar_MPPT:
         # remove last item, may be corrupt
         _buffer.pop(-1)
 
-        if _buffer = "":
+        if _buffer == "":
             for _line in _buffer:
                 _field = _line.split("\t")
                 if len(_field) > 1:
